@@ -22,21 +22,21 @@ interface Props {
   onLogin: () => void;
 }
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const {loggedIn} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState({loading: false, error: false});
 
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     // const credential = await auth.signInWithEmailAndPassword('test1@example.org', '123456');
     // console.log('credential', credential);
 
     try {
       
-      console.log('should login with ', {email, password});
-      const credential = await auth.signInWithEmailAndPassword(email, password);
+      console.log('should SignUp with ', {email, password});
+      const credential = await auth.createUserWithEmailAndPassword(email, password);
       console.log('credential', credential);
       
       
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>My Login Page</IonTitle>
+          <IonTitle>My Register Page</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -72,14 +72,13 @@ const LoginPage: React.FC = () => {
             />
           </IonItem>
         </IonList>
-        {status.error && <IonText color="danger">Invalid credential</IonText>}
-        <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
-
-        <IonButton expand="block" fill="clear" routerLink="/register">Don't have an account</IonButton>
+        {status.error && <IonText color="danger">Invalid Registration</IonText>}
+        <IonButton expand="block" onClick={handleSignUp}>Create Account</IonButton>
+        <IonButton expand="block" fill="clear" routerLink="/login">Already have an account</IonButton>
         <IonLoading isOpen={status.loading} />
       </IonContent>
     </IonPage>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
