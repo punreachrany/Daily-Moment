@@ -10,7 +10,9 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
-  IonLabel
+  IonLabel,
+  IonThumbnail,
+  IonImg
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../auth';
@@ -49,6 +51,9 @@ const HomePage: React.FC = () => {
         <IonList>
           {entries.map((entry) => 
             <IonItem button key={entry.id} routerLink={`/my/home/view/${entry.id}`}>
+              <IonThumbnail slot="end">
+                <IonImg src={entry.pictureUrl}/>
+              </IonThumbnail>
               <IonLabel>
                 <h2>{formatDate(entry.date)}</h2>
                 <h3>{entry.title}</h3>
