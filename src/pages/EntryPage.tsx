@@ -6,19 +6,41 @@ import {
   IonToolbar,
   IonRouterLink,
   IonButtons,
-  IonBackButton
+  IonBackButton,
+  IonButton,
+  IonIcon
 } from '@ionic/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {useParams} from 'react-router';
-import {entries} from '../data'
+import {useHistory, useParams} from 'react-router';
+import {firestore} from '../firebase';
+import {Entry, toEntry} from '../models';
+import { useAuth } from '../auth';
+import {trash as trashIcon} from 'ionicons/icons'
+import {formatDate} from '../date';
 
 const EntryPage: React.FC = () => {
+  const {userId} = useAuth();
   const { id } : any= useParams();
-  const entry = entries.find((entry)=> entry.id === id)
-  if(!entry){
-    throw new Error(`No such entry: ${id}`)
+  const [entry, setEntry] = useState<Entry>();
+  const history = useHistory();
+
+  useEffect(()=>{
+    const entryRef = firestore.collection('users').doc(userId).collection("entries").doc(id);
+    entryRef.get().then((doc)=>{
+      setEntry(toEntry(doc));
+    })
+  }, [userId, id]);
+
+  console.log('[EntryPage] rendered')
+
+
+  const handleDelete = async () => {
+    const entryRef = firestore.collection('users').doc(userId).collection("entries").doc(id);
+    await entryRef.delete();
+    history.goBack();
   }
+
   return (
     <IonPage>
       <IonHeader>
@@ -26,11 +48,17 @@ const EntryPage: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton />
           </IonButtons>
-          <IonTitle>{entry.title}</IonTitle>
+          <IonTitle>{formatDate(entry?.date)}</IonTitle>
+          <IonButtons slot='end'>
+            <IonButton onClick={handleDelete}>
+              <IonIcon icon={trashIcon} slot="icon-only"/>
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-      {entry.description}
+      <h2>{entry?.title}</h2>
+      <p>{entry?.description}</p>
       </IonContent>
     </IonPage>
   );

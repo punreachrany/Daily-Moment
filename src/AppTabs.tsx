@@ -21,6 +21,7 @@ import EntryPage from './pages/EntryPage';
 import {home as homeIcon, settings as settingsIcon} from 'ionicons/icons'
 
 import {useAuth} from './auth'
+import AddEntryPage from './pages/AddEntryPage';
 
 const AppTabs: React.FC = () => {
   const {loggedIn} = useAuth()
@@ -35,8 +36,11 @@ const AppTabs: React.FC = () => {
       <Route exact path="/my/home">
         <HomePage/>
       </Route>
-      <Route exact path="/my/home/:id">
+      <Route exact path="/my/home/view/:id">
         <EntryPage/>
+      </Route>
+      <Route exact path="/my/home/add">
+        <AddEntryPage/>
       </Route>
       <Route exact path="/my/settings">
         <SettingsPage/>
